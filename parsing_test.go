@@ -9,9 +9,7 @@ import (
 	"unicode"
 )
 
-/*
-	Represents a test of parsing all tokens correctly from a string
-*/
+// Represents a test of parsing all tokens correctly from a string
 type TokenParsingTest struct {
 	Name      string
 	Input     string
@@ -29,7 +27,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -40,7 +38,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "50",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 50.0,
 				},
 			},
@@ -51,7 +49,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "0",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 0.0,
 				},
 			},
@@ -61,7 +59,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "0x1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -71,7 +69,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "0x10",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 16.0,
 				},
 			},
@@ -81,7 +79,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "0xabcdef",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 11259375.0,
 				},
 			},
@@ -91,7 +89,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "0xABCDEF",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 11259375.0,
 				},
 			},
@@ -102,7 +100,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "'foo'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 			},
@@ -113,7 +111,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "'2014-01-02'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  TIME,
+					Kind:  timeToken,
 					Value: time.Date(2014, time.January, 2, 0, 0, 0, 0, time.Local),
 				},
 			},
@@ -124,7 +122,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "'2014-01-02 14:12'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  TIME,
+					Kind:  timeToken,
 					Value: time.Date(2014, time.January, 2, 14, 12, 0, 0, time.Local),
 				},
 			},
@@ -135,7 +133,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "'2014-01-02 14:12:22'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  TIME,
+					Kind:  timeToken,
 					Value: time.Date(2014, time.January, 2, 14, 12, 22, 0, time.Local),
 				},
 			},
@@ -146,7 +144,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "true",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 			},
@@ -157,7 +155,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "1234567890",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1234567890.0,
 				},
 			},
@@ -168,7 +166,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "0.5",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 0.5,
 				},
 			},
@@ -179,7 +177,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "3.14567471",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 3.14567471,
 				},
 			},
@@ -190,7 +188,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "false",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: false,
 				},
 			},
@@ -200,7 +198,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "'ÆŦǽഈᚥஇคٸ'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "ÆŦǽഈᚥஇคٸ",
 				},
 			},
@@ -210,7 +208,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "ÆŦǽഈᚥஇคٸ",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "ÆŦǽഈᚥஇคٸ",
 				},
 			},
@@ -221,14 +219,14 @@ func TestConstantParsing(test *testing.T) {
 			Functions: map[string]ExpressionFunction{"foo": noop},
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -238,18 +236,18 @@ func TestConstantParsing(test *testing.T) {
 			Functions: map[string]ExpressionFunction{"foo": noop},
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "bar",
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -259,25 +257,25 @@ func TestConstantParsing(test *testing.T) {
 			Functions: map[string]ExpressionFunction{"foo": noop},
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "bar",
 				},
 				ExpressionToken{
-					Kind: SEPARATOR,
+					Kind: separator,
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -287,57 +285,57 @@ func TestConstantParsing(test *testing.T) {
 			Functions: map[string]ExpressionFunction{"foo": noop},
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "bar",
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 				ExpressionToken{
-					Kind: SEPARATOR,
+					Kind: separator,
 				},
 
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 
 				ExpressionToken{
-					Kind: SEPARATOR,
+					Kind: separator,
 				},
 
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -347,21 +345,21 @@ func TestConstantParsing(test *testing.T) {
 			Functions: map[string]ExpressionFunction{"foo": noop},
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "+",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -372,35 +370,35 @@ func TestConstantParsing(test *testing.T) {
 			Functions: map[string]ExpressionFunction{"foo": noop},
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  FUNCTION,
+					Kind:  function,
 					Value: noop,
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "-",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 3.0,
 				},
 			},
@@ -410,15 +408,15 @@ func TestConstantParsing(test *testing.T) {
 			Input: "\"a\" + [foo]",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "a",
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "+",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo",
 				},
 			},
@@ -428,7 +426,7 @@ func TestConstantParsing(test *testing.T) {
 			Input: "foo.Var",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  ACCESSOR,
+					Kind:  accessor,
 					Value: []string{"foo", "Var"},
 				},
 			},
@@ -438,14 +436,14 @@ func TestConstantParsing(test *testing.T) {
 			Input: "foo.Operation()",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  ACCESSOR,
+					Kind:  accessor,
 					Value: []string{"foo", "Operation"},
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -465,15 +463,15 @@ func TestLogicalOperatorParsing(test *testing.T) {
 			Input: "true && false",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 				ExpressionToken{
-					Kind:  LOGICALOP,
+					Kind:  logicalop,
 					Value: "&&",
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: false,
 				},
 			},
@@ -484,15 +482,15 @@ func TestLogicalOperatorParsing(test *testing.T) {
 			Input: "true || false",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 				ExpressionToken{
-					Kind:  LOGICALOP,
+					Kind:  logicalop,
 					Value: "||",
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: false,
 				},
 			},
@@ -503,23 +501,23 @@ func TestLogicalOperatorParsing(test *testing.T) {
 			Input: "true || false && true",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 				ExpressionToken{
-					Kind:  LOGICALOP,
+					Kind:  logicalop,
 					Value: "||",
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: false,
 				},
 				ExpressionToken{
-					Kind:  LOGICALOP,
+					Kind:  logicalop,
 					Value: "&&",
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 			},
@@ -540,15 +538,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "1 == 2",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 			},
@@ -559,15 +557,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "1 != 2",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "!=",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 			},
@@ -578,15 +576,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "1 > 0",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 0.0,
 				},
 			},
@@ -597,15 +595,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "1 < 2",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "<",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 			},
@@ -616,15 +614,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "1 >= 2",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">=",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 			},
@@ -635,15 +633,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "1 <= 2",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "<=",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 			},
@@ -654,15 +652,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'ab.cd' < 'abc.def'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "ab.cd",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "<",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "abc.def",
 				},
 			},
@@ -673,15 +671,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'ab.cd' <= 'abc.def'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "ab.cd",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "<=",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "abc.def",
 				},
 			},
@@ -692,15 +690,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'ab.cd' > 'abc.def'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "ab.cd",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "abc.def",
 				},
 			},
@@ -711,15 +709,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'ab.cd' >= 'abc.def'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "ab.cd",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">=",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "abc.def",
 				},
 			},
@@ -730,18 +728,18 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foobar' =~ 'bar'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foobar",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "=~",
 				},
 
 				// it's not particularly clean to test for the contents of a pattern, (since it means modifying the harness below)
 				// so pattern contents are left untested.
 				ExpressionToken{
-					Kind: PATTERN,
+					Kind: pattern,
 				},
 			},
 		},
@@ -751,15 +749,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foobar' !~ 'bar'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foobar",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "!~",
 				},
 				ExpressionToken{
-					Kind: PATTERN,
+					Kind: pattern,
 				},
 			},
 		},
@@ -769,15 +767,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' == '+'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "+",
 				},
 			},
@@ -788,15 +786,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' == '/'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "/",
 				},
 			},
@@ -807,15 +805,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' == '**'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "**",
 				},
 			},
@@ -826,15 +824,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' == '^'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "^",
 				},
 			},
@@ -845,15 +843,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' == '>>'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: ">>",
 				},
 			},
@@ -864,15 +862,15 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' == '?'",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "?",
 				},
 			},
@@ -883,29 +881,29 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' in ('foo', 'bar')",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "in",
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind: SEPARATOR,
+					Kind: separator,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "bar",
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -915,29 +913,29 @@ func TestComparatorParsing(test *testing.T) {
 			Input: "'foo' IN ('foo', 'bar')",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "in",
 				},
 				ExpressionToken{
-					Kind: CLAUSE,
+					Kind: clause,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind: SEPARATOR,
+					Kind: separator,
 				},
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "bar",
 				},
 				ExpressionToken{
-					Kind: CLAUSE_CLOSE,
+					Kind: clauseClose,
 				},
 			},
 		},
@@ -957,15 +955,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 + 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "+",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -976,15 +974,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 - 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "-",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -995,15 +993,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 * 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "*",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1014,15 +1012,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 / 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "/",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1033,15 +1031,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 % 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "%",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1052,15 +1050,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 & 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "&",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1071,15 +1069,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 | 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "|",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1090,15 +1088,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 ^ 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "^",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1109,15 +1107,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 << 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: "<<",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1128,15 +1126,15 @@ func TestModifierParsing(test *testing.T) {
 			Input: "1 >> 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  MODIFIER,
+					Kind:  modifier,
 					Value: ">>",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1157,11 +1155,11 @@ func TestPrefixParsing(test *testing.T) {
 			Input: "-1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  PREFIX,
+					Kind:  prefix,
 					Value: "-",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1172,11 +1170,11 @@ func TestPrefixParsing(test *testing.T) {
 			Input: "-foo",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  PREFIX,
+					Kind:  prefix,
 					Value: "-",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo",
 				},
 			},
@@ -1187,11 +1185,11 @@ func TestPrefixParsing(test *testing.T) {
 			Input: "!true",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  PREFIX,
+					Kind:  prefix,
 					Value: "!",
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 			},
@@ -1202,11 +1200,11 @@ func TestPrefixParsing(test *testing.T) {
 			Input: "!foo",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  PREFIX,
+					Kind:  prefix,
 					Value: "!",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo",
 				},
 			},
@@ -1217,11 +1215,11 @@ func TestPrefixParsing(test *testing.T) {
 			Input: "~1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  PREFIX,
+					Kind:  prefix,
 					Value: "~",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1232,11 +1230,11 @@ func TestPrefixParsing(test *testing.T) {
 			Input: "~foo",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  PREFIX,
+					Kind:  prefix,
 					Value: "~",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo",
 				},
 			},
@@ -1257,7 +1255,7 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "[foo]",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo",
 				},
 			},
@@ -1268,7 +1266,7 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "[foo bar]",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo bar",
 				},
 			},
@@ -1279,7 +1277,7 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "[foo[bar\\]]",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo[bar]",
 				},
 			},
@@ -1290,15 +1288,15 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "[foo] > bar",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "bar",
 				},
 			},
@@ -1309,15 +1307,15 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "foo\\ bar > bar",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo bar",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "bar",
 				},
 			},
@@ -1328,15 +1326,15 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "response\\-time > bar",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "response-time",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "bar",
 				},
 			},
@@ -1347,15 +1345,15 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "foo_bar > baz_quux",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "foo_bar",
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: ">",
 				},
 				ExpressionToken{
-					Kind:  VARIABLE,
+					Kind:  variable,
 					Value: "baz_quux",
 				},
 			},
@@ -1366,7 +1364,7 @@ func TestEscapedParameters(test *testing.T) {
 			Input: "\"foo\\'bar\"",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  STRING,
+					Kind:  stringToken,
 					Value: "foo'bar",
 				},
 			},
@@ -1385,15 +1383,15 @@ func TestTernaryParsing(test *testing.T) {
 			Input: "true ? 1",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 				ExpressionToken{
-					Kind:  TERNARY,
+					Kind:  ternary,
 					Value: "?",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
@@ -1404,23 +1402,23 @@ func TestTernaryParsing(test *testing.T) {
 			Input: "1 == 0 ? true",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  COMPARATOR,
+					Kind:  comparator,
 					Value: "==",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 0.0,
 				},
 				ExpressionToken{
-					Kind:  TERNARY,
+					Kind:  ternary,
 					Value: "?",
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 			},
@@ -1431,15 +1429,15 @@ func TestTernaryParsing(test *testing.T) {
 			Input: "1 ?? 2",
 			Expected: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind:  TERNARY,
+					Kind:  ternary,
 					Value: "??",
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 2.0,
 				},
 			},
@@ -1449,9 +1447,7 @@ func TestTernaryParsing(test *testing.T) {
 	runTokenParsingTest(tokenParsingTests, test)
 }
 
-/*
-	Tests to make sure that the String() reprsentation of an expression exactly matches what is given to the parse function.
-*/
+// Tests to make sure that the String() reprsentation of an expression exactly matches what is given to the parse function.
 func TestOriginalString(test *testing.T) {
 
 	// include all the token types, to be sure there's no shenaniganery going on.
@@ -1461,7 +1457,7 @@ func TestOriginalString(test *testing.T) {
 		"[escapedVariable name with spaces] <= unescaped\\-variableName &&" +
 		"modifierTest + 1000 / 2 > (80 * 100 % 2) && true ? true : false"
 
-	expression, err := NewEvaluableExpression(expressionString)
+	expression, err := NewExpression(expressionString)
 	if err != nil {
 
 		test.Logf("failed to parse original string test: %v", err)
@@ -1475,9 +1471,7 @@ func TestOriginalString(test *testing.T) {
 	}
 }
 
-/*
-	Tests to make sure that the Vars() reprsentation of an expression identifies all variables contained within the expression.
-*/
+// Tests to make sure that the Vars() reprsentation of an expression identifies all variables contained within the expression.
 func TestOriginalVars(test *testing.T) {
 
 	// include all the token types, to be sure there's no shenaniganery going on.
@@ -1491,7 +1485,7 @@ func TestOriginalVars(test *testing.T) {
 		"modifierTest",
 		"unescaped-variableName"}
 
-	expression, err := NewEvaluableExpression(expressionString)
+	expression, err := NewExpression(expressionString)
 	if err != nil {
 
 		test.Logf("failed to parse original var test: %v", err)
@@ -1565,7 +1559,7 @@ func stripUnquotedWhitespace(expression string) string {
 func runTokenParsingTest(tokenParsingTests []TokenParsingTest, test *testing.T) {
 
 	var parsingTest TokenParsingTest
-	var expression *EvaluableExpression
+	var expression *Expression
 	var actualTokens []ExpressionToken
 	var actualToken ExpressionToken
 	var expectedTokenKindString, actualTokenKindString string
@@ -1584,9 +1578,9 @@ func runTokenParsingTest(tokenParsingTests []TokenParsingTest, test *testing.T) 
 	for _, parsingTest = range tokenParsingTests {
 
 		if parsingTest.Functions != nil {
-			expression, err = NewEvaluableExpressionWithFunctions(parsingTest.Input, parsingTest.Functions)
+			expression, err = NewExpressionWithFunctions(parsingTest.Input, parsingTest.Functions)
 		} else {
-			expression, err = NewEvaluableExpression(parsingTest.Input)
+			expression, err = NewExpression(parsingTest.Input)
 		}
 
 		if err != nil {

@@ -147,11 +147,11 @@ At no point is the parameter structure, or any value thereof, modified by this l
 
 The default form of parameters as a map may not serve your use case. You may have parameters in some other structure, you may want to change the no-parameter-found behavior, or maybe even just have some debugging print statements invoked when a parameter is accessed.
 
-To do this, define a type that implements the `govaluate.Parameters` interface. When you want to evaluate, instead call `EvaluableExpression.Eval` and pass your parameter structure.
+To do this, define a type that implements the `govaluate.Parameters` interface. When you want to evaluate, instead call `Expression.Eval` and pass your parameter structure.
 
 # Functions
 
-During expression parsing (_not_ evaluation), a map of functions can be given to `govaluate.NewEvaluableExpressionWithFunctions` (the lengthiest and finest of function names). The resultant expression will be able to invoke those functions during evaluation. Once parsed, an expression cannot have functions added or removed - a new expression will need to be created if you want to change the functions, or behavior of said functions.
+During expression parsing (_not_ evaluation), a map of functions can be given to `govaluate.NewExpressionWithFunctions` (the lengthiest and finest of function names). The resultant expression will be able to invoke those functions during evaluation. Once parsed, an expression cannot have functions added or removed - a new expression will need to be created if you want to change the functions, or behavior of said functions.
 
 Functions always take the form `<name>(<parameters>)`, including parens. Functions can have an empty list of parameters, like `<name>()`, but still must have parens.
 

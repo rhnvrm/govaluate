@@ -19,10 +19,10 @@ A lot of people wind up writing their own half-baked style of evaluation languag
 How do I use it?
 --
 
-You create a new EvaluableExpression, then call "Evaluate" on it.
+You create a new Expression, then call "Evaluate" on it.
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("10 > 0");
+	expression, err := govaluate.NewExpression("10 > 0");
 	result, err := expression.Evaluate(nil);
 	// result is now set to "true", the bool value.
 ```
@@ -30,7 +30,7 @@ You create a new EvaluableExpression, then call "Evaluate" on it.
 Cool, but how about with parameters?
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("foo > 0");
+	expression, err := govaluate.NewExpression("foo > 0");
 
 	parameters := make(map[string]interface{}, 8)
 	parameters["foo"] = -1;
@@ -42,7 +42,7 @@ Cool, but how about with parameters?
 That's cool, but we can almost certainly have done all that in code. What about a complex use case that involves some math?
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90");
+	expression, err := govaluate.NewExpression("(requests_made * requests_succeeded / 100) >= 90");
 
 	parameters := make(map[string]interface{}, 8)
 	parameters["requests_made"] = 100;
@@ -55,7 +55,7 @@ That's cool, but we can almost certainly have done all that in code. What about 
 Or maybe you want to check the status of an alive check ("smoketest") page, which will be a string?
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("http_response_body == 'service is ok'");
+	expression, err := govaluate.NewExpression("http_response_body == 'service is ok'");
 
 	parameters := make(map[string]interface{}, 8)
 	parameters["http_response_body"] = "service is ok";
@@ -67,7 +67,7 @@ Or maybe you want to check the status of an alive check ("smoketest") page, whic
 These examples have all returned boolean values, but it's equally possible to return numeric ones.
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("(mem_used / total_mem) * 100");
+	expression, err := govaluate.NewExpression("(mem_used / total_mem) * 100");
 
 	parameters := make(map[string]interface{}, 8)
 	parameters["total_mem"] = 1024;
@@ -80,7 +80,7 @@ These examples have all returned boolean values, but it's equally possible to re
 You can also do date parsing, though the formats are somewhat limited. Stick to RF3339, ISO8061, unix date, or ruby date formats. If you're having trouble getting a date string to parse, check the list of formats actually used: [parsing.go:248](https://github.com/Knetic/govaluate/blob/0580e9b47a69125afa0e4ebd1cf93c49eb5a43ec/parsing.go#L258).
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("'2014-01-02' > '2014-01-01 23:59:59'");
+	expression, err := govaluate.NewExpression("'2014-01-02' > '2014-01-01 23:59:59'");
 	result, err := expression.Evaluate(nil);
 
 	// result is now set to true
@@ -89,7 +89,7 @@ You can also do date parsing, though the formats are somewhat limited. Stick to 
 Expressions are parsed once, and can be re-used multiple times. Parsing is the compute-intensive phase of the process, so if you intend to use the same expression with different parameters, just parse it once. Like so;
 
 ```go
-	expression, err := govaluate.NewEvaluableExpression("response_time <= 100");
+	expression, err := govaluate.NewExpression("response_time <= 100");
 	parameters := make(map[string]interface{}, 8)
 
 	for {
@@ -125,7 +125,7 @@ Backslashes can be used anywhere in an expression to escape the very next charac
 Functions
 --
 
-You may have cases where you want to call a function on a parameter during execution of the expression. Perhaps you want to aggregate some set of data, but don't know the exact aggregation you want to use until you're writing the expression itself. Or maybe you have a mathematical operation you want to perform, for which there is no operator; like `log` or `tan` or `sqrt`. For cases like this, you can provide a map of functions to `NewEvaluableExpressionWithFunctions`, which will then be able to use them during execution. For instance;
+You may have cases where you want to call a function on a parameter during execution of the expression. Perhaps you want to aggregate some set of data, but don't know the exact aggregation you want to use until you're writing the expression itself. Or maybe you have a mathematical operation you want to perform, for which there is no operator; like `log` or `tan` or `sqrt`. For cases like this, you can provide a map of functions to `NewExpressionWithFunctions`, which will then be able to use them during execution. For instance;
 
 ```go
 	functions := map[string]govaluate.ExpressionFunction {
@@ -136,7 +136,7 @@ You may have cases where you want to call a function on a parameter during execu
 	}
 
 	expString := "strlen('someReallyLongInputString') <= 16"
-	expression, _ := govaluate.NewEvaluableExpressionWithFunctions(expString, functions)
+	expression, _ := govaluate.NewExpressionWithFunctions(expString, functions)
 
 	result, _ := expression.Evaluate(nil)
 	// result is now "false", the boolean value

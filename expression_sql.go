@@ -7,30 +7,26 @@ import (
 	"time"
 )
 
-/*
-	Returns a string representing this expression as if it were written in SQL.
-	This function assumes that all parameters exist within the same table, and that the table essentially represents
-	a serialized object of some sort (e.g., hibernate).
-	If your data model is more normalized, you may need to consider iterating through each actual token given by `Tokens()`
-	to create your query.
-
-	Boolean values are considered to be "1" for true, "0" for false.
-
-	Times are formatted according to this.QueryDateFormat.
-*/
-func (this EvaluableExpression) ToSQLQuery() (string, error) {
+// ToSQLQuery returns a string representing this expression as if it were written in SQL.
+// This function assumes that all parameters exist within the same table, and that the table essentially represents
+// a serialized object of some sort (e.g., hibernate).
+// If your data model is more normalized, you may need to consider iterating through each actual token given by `Tokens()`
+// to create your query.
+// Boolean values are considered to be "1" for true, "0" for false.
+// Times are formatted according to this.QueryDateFormat.
+func (expr Expression) ToSQLQuery() (string, error) {
 
 	var stream *tokenStream
 	var transactions *expressionOutputStream
 	var transaction string
 	var err error
 
-	stream = newTokenStream(this.tokens)
+	stream = newTokenStream(expr.tokens)
 	transactions = new(expressionOutputStream)
 
 	for stream.hasNext() {
 
-		transaction, err = this.findNextSQLString(stream, transactions)
+		transaction, err = expr.findNextSQLString(stream, transactions)
 		if err != nil {
 			return "", err
 		}
@@ -41,7 +37,7 @@ func (this EvaluableExpression) ToSQLQuery() (string, error) {
 	return transactions.createString(" "), nil
 }
 
-func (this EvaluableExpression) findNextSQLString(stream *tokenStream, transactions *expressionOutputStream) (string, error) {
+func (expr Expression) findNextSQLString(stream *tokenStream, transactions *expressionOutputStream) (string, error) {
 
 	var token ExpressionToken
 	var ret string
@@ -50,99 +46,99 @@ func (this EvaluableExpression) findNextSQLString(stream *tokenStream, transacti
 
 	switch token.Kind {
 
-	case STRING:
+	case stringToken:
 		ret = fmt.Sprintf("'%v'", token.Value)
-	case PATTERN:
+	case pattern:
 		ret = fmt.Sprintf("'%s'", token.Value.(*regexp.Regexp).String())
-	case TIME:
-		ret = fmt.Sprintf("'%s'", token.Value.(time.Time).Format(this.QueryDateFormat))
+	case timeToken:
+		ret = fmt.Sprintf("'%s'", token.Value.(time.Time).Format(expr.QueryDateFormat))
 
-	case LOGICALOP:
+	case logicalop:
 		switch logicalSymbols[token.Value.(string)] {
 
-		case AND:
+		case and:
 			ret = "AND"
-		case OR:
+		case or:
 			ret = "OR"
 		}
 
-	case BOOLEAN:
+	case boolean:
 		if token.Value.(bool) {
 			ret = "1"
 		} else {
 			ret = "0"
 		}
 
-	case VARIABLE:
+	case variable:
 		ret = fmt.Sprintf("[%s]", token.Value.(string))
 
-	case NUMERIC:
+	case numeric:
 		ret = fmt.Sprintf("%g", token.Value.(float64))
 
-	case COMPARATOR:
+	case comparator:
 		switch comparatorSymbols[token.Value.(string)] {
 
-		case EQ:
+		case eq:
 			ret = "="
-		case NEQ:
+		case neq:
 			ret = "<>"
-		case REQ:
+		case req:
 			ret = "RLIKE"
-		case NREQ:
+		case nreq:
 			ret = "NOT RLIKE"
 		default:
 			ret = fmt.Sprintf("%s", token.Value.(string))
 		}
 
-	case TERNARY:
+	case ternary:
 
 		switch ternarySymbols[token.Value.(string)] {
 
-		case COALESCE:
+		case coalesce:
 
 			left := transactions.rollback()
-			right, err := this.findNextSQLString(stream, transactions)
+			right, err := expr.findNextSQLString(stream, transactions)
 			if err != nil {
 				return "", err
 			}
 
 			ret = fmt.Sprintf("COALESCE(%v, %v)", left, right)
-		case TERNARY_TRUE:
+		case ternaryTrue:
 			fallthrough
-		case TERNARY_FALSE:
+		case ternaryFalse:
 			return "", errors.New("Ternary operators are unsupported in SQL output")
 		}
-	case PREFIX:
+	case prefix:
 		switch prefixSymbols[token.Value.(string)] {
 
-		case INVERT:
+		case invert:
 			ret = fmt.Sprintf("NOT")
 		default:
 
-			right, err := this.findNextSQLString(stream, transactions)
+			right, err := expr.findNextSQLString(stream, transactions)
 			if err != nil {
 				return "", err
 			}
 
 			ret = fmt.Sprintf("%s%s", token.Value.(string), right)
 		}
-	case MODIFIER:
+	case modifier:
 
 		switch modifierSymbols[token.Value.(string)] {
 
-		case EXPONENT:
+		case exponent:
 
 			left := transactions.rollback()
-			right, err := this.findNextSQLString(stream, transactions)
+			right, err := expr.findNextSQLString(stream, transactions)
 			if err != nil {
 				return "", err
 			}
 
 			ret = fmt.Sprintf("POW(%s, %s)", left, right)
-		case MODULUS:
+		case modulus:
 
 			left := transactions.rollback()
-			right, err := this.findNextSQLString(stream, transactions)
+			right, err := expr.findNextSQLString(stream, transactions)
 			if err != nil {
 				return "", err
 			}
@@ -151,11 +147,11 @@ func (this EvaluableExpression) findNextSQLString(stream *tokenStream, transacti
 		default:
 			ret = fmt.Sprintf("%s", token.Value.(string))
 		}
-	case CLAUSE:
+	case clause:
 		ret = "("
-	case CLAUSE_CLOSE:
+	case clauseClose:
 		ret = ")"
-	case SEPARATOR:
+	case separator:
 		ret = ","
 
 	default:

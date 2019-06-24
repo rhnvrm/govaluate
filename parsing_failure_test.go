@@ -8,22 +8,20 @@ import (
 )
 
 const (
-	UNEXPECTED_END           string = "Unexpected end of expression"
-	INVALID_TOKEN_TRANSITION        = "Cannot transition token types"
-	INVALID_TOKEN_KIND              = "Invalid token"
-	UNCLOSED_QUOTES                 = "Unclosed string literal"
-	UNCLOSED_BRACKETS               = "Unclosed parameter bracket"
-	UNBALANCED_PARENTHESIS          = "Unbalanced parenthesis"
-	INVALID_NUMERIC                 = "Unable to parse numeric value"
-	UNDEFINED_FUNCTION              = "Undefined function"
-	HANGING_ACCESSOR                = "Hanging accessor on token"
-	UNEXPORTED_ACCESSOR             = "Unable to access unexported"
-	INVALID_HEX                     = "Unable to parse hex value"
+	unexpectedEnd          string = "Unexpected end of expression"
+	invalidTokenTransition        = "Cannot transition token types"
+	invalidTokenKind              = "Invalid token"
+	unclosedQuotes                = "Unclosed string literal"
+	unclosedBrackets              = "Unclosed parameter bracket"
+	unbalancedParenthesis         = "Unbalanced parenthesis"
+	invalidNumeric                = "Unable to parse numeric value"
+	undefinedFunction             = "Undefined function"
+	hangingAccessor               = "Hanging accessor on token"
+	unexportedAccessor            = "Unable to access unexported"
+	invalidHex                    = "Unable to parse hex value"
 )
 
-/*
-	Represents a test for parsing failures
-*/
+// Represents a test for parsing failures
 type ParsingFailureTest struct {
 	Name     string
 	Input    string
@@ -38,115 +36,115 @@ func TestParsingFailure(test *testing.T) {
 
 			Name:     "Invalid equality comparator",
 			Input:    "1 = 1",
-			Expected: INVALID_TOKEN_KIND,
+			Expected: invalidTokenKind,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid equality comparator",
 			Input:    "1 === 1",
-			Expected: INVALID_TOKEN_KIND,
+			Expected: invalidTokenKind,
 		},
 		ParsingFailureTest{
 
 			Name:     "Too many characters for logical operator",
 			Input:    "true &&& false",
-			Expected: INVALID_TOKEN_KIND,
+			Expected: invalidTokenKind,
 		},
 		ParsingFailureTest{
 
 			Name:     "Too many characters for logical operator",
 			Input:    "true ||| false",
-			Expected: INVALID_TOKEN_KIND,
+			Expected: invalidTokenKind,
 		},
 		ParsingFailureTest{
 
 			Name:     "Premature end to expression, via modifier",
 			Input:    "10 > 5 +",
-			Expected: UNEXPECTED_END,
+			Expected: unexpectedEnd,
 		},
 		ParsingFailureTest{
 
 			Name:     "Premature end to expression, via comparator",
 			Input:    "10 + 5 >",
-			Expected: UNEXPECTED_END,
+			Expected: unexpectedEnd,
 		},
 		ParsingFailureTest{
 
 			Name:     "Premature end to expression, via logical operator",
 			Input:    "10 > 5 &&",
-			Expected: UNEXPECTED_END,
+			Expected: unexpectedEnd,
 		},
 		ParsingFailureTest{
 
 			Name:     "Premature end to expression, via ternary operator",
 			Input:    "true ?",
-			Expected: UNEXPECTED_END,
+			Expected: unexpectedEnd,
 		},
 		ParsingFailureTest{
 
 			Name:     "Hanging REQ",
 			Input:    "'wat' =~",
-			Expected: UNEXPECTED_END,
+			Expected: unexpectedEnd,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid operator change to REQ",
 			Input:    " / =~",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid starting token, comparator",
 			Input:    "> 10",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid starting token, modifier",
 			Input:    "+ 5",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid starting token, logical operator",
 			Input:    "&& 5 < 10",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid NUMERIC transition",
 			Input:    "10 10",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid STRING transition",
 			Input:    "'foo' 'foo'",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Invalid operator transition",
 			Input:    "10 > < 10",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Starting with unbalanced parens",
 			Input:    " ) ( arg2",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 
 			Name:     "Unclosed bracket",
 			Input:    "[foo bar",
-			Expected: UNCLOSED_BRACKETS,
+			Expected: unclosedBrackets,
 		},
 		ParsingFailureTest{
 
 			Name:     "Unclosed quote",
 			Input:    "foo == 'responseTime",
-			Expected: UNCLOSED_QUOTES,
+			Expected: unclosedQuotes,
 		},
 		ParsingFailureTest{
 
@@ -158,52 +156,52 @@ func TestParsingFailure(test *testing.T) {
 
 			Name:     "Unbalanced parenthesis",
 			Input:    "10 > (1 + 50",
-			Expected: UNBALANCED_PARENTHESIS,
+			Expected: unbalancedParenthesis,
 		},
 		ParsingFailureTest{
 
 			Name:     "Multiple radix",
 			Input:    "127.0.0.1",
-			Expected: INVALID_NUMERIC,
+			Expected: invalidNumeric,
 		},
 		ParsingFailureTest{
 
 			Name:     "Undefined function",
 			Input:    "foobar()",
-			Expected: UNDEFINED_FUNCTION,
+			Expected: undefinedFunction,
 		},
 		ParsingFailureTest{
 
 			Name:     "Hanging accessor",
 			Input:    "foo.Bar.",
-			Expected: HANGING_ACCESSOR,
+			Expected: hangingAccessor,
 		},
 		ParsingFailureTest{
 
 			// this is expected to change once there are structtags in place that allow aliasing of fields
 			Name:     "Unexported parameter access",
 			Input:    "foo.bar",
-			Expected: UNEXPORTED_ACCESSOR,
+			Expected: unexportedAccessor,
 		},
 		ParsingFailureTest{
 			Name:     "Incomplete Hex",
 			Input:    "0x",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 			Name:     "Invalid Hex literal",
 			Input:    "0x > 0",
-			Expected: INVALID_HEX,
+			Expected: invalidHex,
 		},
 		ParsingFailureTest{
 			Name:     "Hex float (Unsupported)",
 			Input:    "0x1.1",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 		ParsingFailureTest{
 			Name:     "Hex invalid letter",
 			Input:    "0x12g1",
-			Expected: INVALID_TOKEN_TRANSITION,
+			Expected: invalidTokenTransition,
 		},
 	}
 
@@ -218,7 +216,7 @@ func runParsingFailureTests(parsingTests []ParsingFailureTest, test *testing.T) 
 
 	for _, testCase := range parsingTests {
 
-		_, err = NewEvaluableExpression(testCase.Input)
+		_, err = NewExpression(testCase.Input)
 
 		if err == nil {
 

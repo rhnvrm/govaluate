@@ -4,9 +4,7 @@ import (
 	"testing"
 )
 
-/*
-	Represents a test of correctly creating a SQL query string from an expression.
-*/
+// Represents a test of correctly creating a SQL query string from an expression.
 type QueryTest struct {
 	Name     string
 	Input    string
@@ -162,32 +160,32 @@ func TestSQLSerialization(test *testing.T) {
 			Input:    "foo ?? bar",
 			Expected: "COALESCE([foo], [bar])",
 		},
-		/*
-			// Ternaries don't work yet, because the outputter is not yet sophisticated enough to produce them.
-			QueryTest{
 
-				Name:     "Full ternary",
-				Input:    "[foo] == 5 ? 1 : 2",
-				Expected: "IF([foo] = 5, 1, 2)",
-			},
-			QueryTest{
+		// Ternaries don't work yet, because the outputter is not yet sophisticated enough to produce them.
+		// QueryTest{
 
-				Name:     "Half ternary",
-				Input:    "[foo] == 5 ? 1",
-				Expected: "IF([foo] = 5, 1)",
-			},
-			QueryTest{
+		// 	Name:     "Full ternary",
+		// 	Input:    "[foo] == 5 ? 1 : 2",
+		// 	Expected: "IF([foo] = 5, 1, 2)",
+		// },
+		// QueryTest{
 
-				Name:     "Full ternary with implicit bool",
-				Input:    "[foo] ? 1 : 2",
-				Expected: "IF([foo] = 0, 1, 2)",
-			},
-			QueryTest{
+		// 	Name:     "Half ternary",
+		// 	Input:    "[foo] == 5 ? 1",
+		// 	Expected: "IF([foo] = 5, 1)",
+		// },
+		// QueryTest{
 
-				Name:     "Half ternary with implicit bool",
-				Input:    "[foo] ? 1",
-				Expected: "IF([foo] = 0, 1)",
-			},*/
+		// 	Name:     "Full ternary with implicit bool",
+		// 	Input:    "[foo] ? 1 : 2",
+		// 	Expected: "IF([foo] = 0, 1, 2)",
+		// },
+		// QueryTest{
+
+		// 	Name:     "Half ternary with implicit bool",
+		// 	Input:    "[foo] ? 1",
+		// 	Expected: "IF([foo] = 0, 1)",
+		// },
 		QueryTest{
 
 			Name:     "Regex equals",
@@ -207,7 +205,7 @@ func TestSQLSerialization(test *testing.T) {
 
 func runQueryTests(testCases []QueryTest, test *testing.T) {
 
-	var expression *EvaluableExpression
+	var expression *Expression
 	var actualQuery string
 	var err error
 
@@ -216,7 +214,7 @@ func runQueryTests(testCases []QueryTest, test *testing.T) {
 	// Run the test cases.
 	for _, testCase := range testCases {
 
-		expression, err = NewEvaluableExpression(testCase.Input)
+		expression, err = NewExpression(testCase.Input)
 
 		if err != nil {
 

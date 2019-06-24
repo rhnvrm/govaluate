@@ -1,8 +1,6 @@
 package govaluate
 
-/*
-  Tests to make sure evaluation fails in the expected ways.
-*/
+// Tests to make sure evaluation fails in the expected ways.
 import (
 	"errors"
 	"fmt"
@@ -14,9 +12,7 @@ type DebugStruct struct {
 	x int
 }
 
-/*
-	Represents a test for parsing failures
-*/
+// Represents a test for parsing failures
 type EvaluationFailureTest struct {
 	Name       string
 	Input      string
@@ -26,20 +22,19 @@ type EvaluationFailureTest struct {
 }
 
 const (
-	INVALID_MODIFIER_TYPES   string = "cannot be used with the modifier"
-	INVALID_COMPARATOR_TYPES        = "cannot be used with the comparator"
-	INVALID_LOGICALOP_TYPES         = "cannot be used with the logical operator"
-	INVALID_TERNARY_TYPES           = "cannot be used with the ternary operator"
-	ABSENT_PARAMETER                = "No parameter"
-	INVALID_REGEX                   = "Unable to compile regexp pattern"
-	INVALID_PARAMETER_CALL          = "No method or field"
-	TOO_FEW_ARGS                    = "Too few arguments to parameter call"
-	TOO_MANY_ARGS                   = "Too many arguments to parameter call"
-	MISMATCHED_PARAMETERS           = "Argument type conversion failed"
+	invalidModifierTypes   string = "cannot be used with the modifier"
+	invalidComparatorTypes        = "cannot be used with the comparator"
+	invalidLogicalopTypes         = "cannot be used with the logical operator"
+	invalidTernaryTypes           = "cannot be used with the ternary operator"
+	invalidRegex                  = "Unable to compile regexp pattern"
+	invalidParameterCall          = "No method or field"
+	tooFewArgs                    = "Too few arguments to parameter call"
+	tooManyArgs                   = "Too many arguments to parameter call"
+	mismatchedParameters          = "Argument type conversion failed"
 )
 
 // preset parameter map of types that can be used in an evaluation failure test to check typing.
-var EVALUATION_FAILURE_PARAMETERS = map[string]interface{}{
+var evaluationFailureParameters = map[string]interface{}{
 	"number": 1,
 	"string": "foo",
 	"bool":   true,
@@ -47,7 +42,7 @@ var EVALUATION_FAILURE_PARAMETERS = map[string]interface{}{
 
 func TestComplexParameter(test *testing.T) {
 
-	var expression *EvaluableExpression
+	var expression *Expression
 	var err error
 	var v interface{}
 
@@ -56,7 +51,7 @@ func TestComplexParameter(test *testing.T) {
 		"complex128": complex128(0),
 	}
 
-	expression, _ = NewEvaluableExpression("complex64")
+	expression, _ = NewExpression("complex64")
 	v, err = expression.Evaluate(parameters)
 	if err != nil {
 		test.Errorf("Expected no error, but have %s", err)
@@ -65,7 +60,7 @@ func TestComplexParameter(test *testing.T) {
 		test.Errorf("Expected %v == %v", v, complex64(0))
 	}
 
-	expression, _ = NewEvaluableExpression("complex128")
+	expression, _ = NewExpression("complex128")
 	v, err = expression.Evaluate(parameters)
 	if err != nil {
 		test.Errorf("Expected no error, but have %s", err)
@@ -77,7 +72,7 @@ func TestComplexParameter(test *testing.T) {
 
 func TestStructParameter(t *testing.T) {
 	expected := DebugStruct{}
-	expression, _ := NewEvaluableExpression("foo")
+	expression, _ := NewExpression("foo")
 	parameters := map[string]interface{}{"foo": expected}
 	v, err := expression.Evaluate(parameters)
 	if err != nil {
@@ -89,7 +84,7 @@ func TestStructParameter(t *testing.T) {
 
 func TestNilParameterUsage(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("2 > 1")
+	expression, err := NewExpression("2 > 1")
 	_, err = expression.Evaluate(nil)
 
 	if err != nil {
@@ -105,85 +100,85 @@ func TestModifierTyping(test *testing.T) {
 
 			Name:     "PLUS literal number to literal bool",
 			Input:    "1 + true",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "PLUS number to bool",
 			Input:    "number + bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "MINUS number to bool",
 			Input:    "number - bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "MINUS number to bool",
 			Input:    "number - bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "MULTIPLY number to bool",
 			Input:    "number * bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "DIVIDE number to bool",
 			Input:    "number / bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "EXPONENT number to bool",
 			Input:    "number ** bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "MODULUS number to bool",
 			Input:    "number % bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "XOR number to bool",
 			Input:    "number % bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "BITWISE_OR number to bool",
 			Input:    "number | bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "BITWISE_AND number to bool",
 			Input:    "number & bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "BITWISE_XOR number to bool",
 			Input:    "number ^ bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "BITWISE_LSHIFT number to bool",
 			Input:    "number << bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "BITWISE_RSHIFT number to bool",
 			Input:    "number >> bool",
-			Expected: INVALID_MODIFIER_TYPES,
+			Expected: invalidModifierTypes,
 		},
 	}
 
@@ -197,59 +192,57 @@ func TestLogicalOperatorTyping(test *testing.T) {
 
 			Name:     "AND number to number",
 			Input:    "number && number",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "OR number to number",
 			Input:    "number || number",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "AND string to string",
 			Input:    "string && string",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "OR string to string",
 			Input:    "string || string",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "AND number to string",
 			Input:    "number && string",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "OR number to string",
 			Input:    "number || string",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "AND bool to string",
 			Input:    "bool && string",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "OR string to bool",
 			Input:    "string || bool",
-			Expected: INVALID_LOGICALOP_TYPES,
+			Expected: invalidLogicalopTypes,
 		},
 	}
 
 	runEvaluationFailureTests(evaluationTests, test)
 }
 
-/*
-	While there is type-safe transitions checked at parse-time, tested in the "parsing_test" and "parsingFailure_test" files,
-	we also need to make sure that we receive type mismatch errors during evaluation.
-*/
+// While there is type-safe transitions checked at parse-time, tested in the "parsing_test" and "parsingFailure_test" files,
+// we also need to make sure that we receive type mismatch errors during evaluation.
 func TestComparatorTyping(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
@@ -257,116 +250,116 @@ func TestComparatorTyping(test *testing.T) {
 
 			Name:     "GT literal bool to literal bool",
 			Input:    "true > true",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "GT bool to bool",
 			Input:    "bool > bool",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "GTE bool to bool",
 			Input:    "bool >= bool",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "LT bool to bool",
 			Input:    "bool < bool",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "LTE bool to bool",
 			Input:    "bool <= bool",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 
 		EvaluationFailureTest{
 
 			Name:     "GT number to string",
 			Input:    "number > string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "GTE number to string",
 			Input:    "number >= string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "LT number to string",
 			Input:    "number < string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "REQ number to string",
 			Input:    "number =~ string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "REQ number to bool",
 			Input:    "number =~ bool",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "REQ bool to number",
 			Input:    "bool =~ number",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "REQ bool to string",
 			Input:    "bool =~ string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "NREQ number to string",
 			Input:    "number !~ string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "NREQ number to bool",
 			Input:    "number !~ bool",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "NREQ bool to number",
 			Input:    "bool !~ number",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "NREQ bool to string",
 			Input:    "bool !~ string",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "IN non-array numeric",
 			Input:    "1 in 2",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "IN non-array string",
 			Input:    "1 in 'foo'",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "IN non-array boolean",
 			Input:    "1 in true",
-			Expected: INVALID_COMPARATOR_TYPES,
+			Expected: invalidComparatorTypes,
 		},
 	}
 
@@ -380,13 +373,13 @@ func TestTernaryTyping(test *testing.T) {
 
 			Name:     "Ternary with number",
 			Input:    "10 ? true",
-			Expected: INVALID_TERNARY_TYPES,
+			Expected: invalidTernaryTypes,
 		},
 		EvaluationFailureTest{
 
 			Name:     "Ternary with string",
 			Input:    "'foo' ? true",
-			Expected: INVALID_TERNARY_TYPES,
+			Expected: invalidTernaryTypes,
 		},
 	}
 
@@ -403,7 +396,7 @@ func TestRegexParameterCompilation(test *testing.T) {
 			Parameters: map[string]interface{}{
 				"foo": "[foo",
 			},
-			Expected: INVALID_REGEX,
+			Expected: invalidRegex,
 		},
 		EvaluationFailureTest{
 
@@ -412,7 +405,7 @@ func TestRegexParameterCompilation(test *testing.T) {
 			Parameters: map[string]interface{}{
 				"foo": "[foo",
 			},
-			Expected: INVALID_REGEX,
+			Expected: invalidRegex,
 		},
 	}
 
@@ -446,21 +439,21 @@ func TestInvalidParameterCalls(test *testing.T) {
 			Name:       "Missing parameter field reference",
 			Input:      "foo.NotExists",
 			Parameters: fooFailureParameters,
-			Expected:   INVALID_PARAMETER_CALL,
+			Expected:   invalidParameterCall,
 		},
 		EvaluationFailureTest{
 
 			Name:       "Parameter method call on missing function",
 			Input:      "foo.NotExist()",
 			Parameters: fooFailureParameters,
-			Expected:   INVALID_PARAMETER_CALL,
+			Expected:   invalidParameterCall,
 		},
 		EvaluationFailureTest{
 
 			Name:       "Nested missing parameter field reference",
 			Input:      "foo.Nested.NotExists",
 			Parameters: fooFailureParameters,
-			Expected:   INVALID_PARAMETER_CALL,
+			Expected:   invalidParameterCall,
 		},
 		EvaluationFailureTest{
 
@@ -474,21 +467,21 @@ func TestInvalidParameterCalls(test *testing.T) {
 			Name:       "Too few arguments to parameter call",
 			Input:      "foo.FuncArgStr()",
 			Parameters: fooFailureParameters,
-			Expected:   TOO_FEW_ARGS,
+			Expected:   tooFewArgs,
 		},
 		EvaluationFailureTest{
 
 			Name:       "Too many arguments to parameter call",
 			Input:      "foo.FuncArgStr('foo', 'bar', 15)",
 			Parameters: fooFailureParameters,
-			Expected:   TOO_MANY_ARGS,
+			Expected:   tooManyArgs,
 		},
 		EvaluationFailureTest{
 
 			Name:       "Mismatched parameters",
 			Input:      "foo.FuncArgStr(5)",
 			Parameters: fooFailureParameters,
-			Expected:   MISMATCHED_PARAMETERS,
+			Expected:   mismatchedParameters,
 		},
 	}
 
@@ -497,7 +490,7 @@ func TestInvalidParameterCalls(test *testing.T) {
 
 func runEvaluationFailureTests(evaluationTests []EvaluationFailureTest, test *testing.T) {
 
-	var expression *EvaluableExpression
+	var expression *Expression
 	var err error
 
 	fmt.Printf("Running %d negative parsing test cases...\n", len(evaluationTests))
@@ -505,9 +498,9 @@ func runEvaluationFailureTests(evaluationTests []EvaluationFailureTest, test *te
 	for _, testCase := range evaluationTests {
 
 		if len(testCase.Functions) > 0 {
-			expression, err = NewEvaluableExpressionWithFunctions(testCase.Input, testCase.Functions)
+			expression, err = NewExpressionWithFunctions(testCase.Input, testCase.Functions)
 		} else {
-			expression, err = NewEvaluableExpression(testCase.Input)
+			expression, err = NewExpression(testCase.Input)
 		}
 
 		if err != nil {
@@ -519,7 +512,7 @@ func runEvaluationFailureTests(evaluationTests []EvaluationFailureTest, test *te
 		}
 
 		if testCase.Parameters == nil {
-			testCase.Parameters = EVALUATION_FAILURE_PARAMETERS
+			testCase.Parameters = evaluationFailureParameters
 		}
 
 		_, err = expression.Evaluate(testCase.Parameters)

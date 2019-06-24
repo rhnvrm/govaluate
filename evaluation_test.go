@@ -8,9 +8,7 @@ import (
 	"time"
 )
 
-/*
-	Represents a test of expression evaluation
-*/
+// Represents a test of expression evaluation
 type EvaluationTest struct {
 	Name       string
 	Input      string
@@ -710,7 +708,7 @@ func TestNoParameterEvaluation(test *testing.T) {
 			Expected: true,
 		},
 		EvaluationTest{
-			
+
 			Name:  "Ternary/Java EL ambiguity",
 			Input: "false ? foo:length()",
 			Functions: map[string]ExpressionFunction{
@@ -1424,12 +1422,10 @@ func TestParameterizedEvaluation(test *testing.T) {
 	runEvaluationTests(evaluationTests, test)
 }
 
-/*
-	Tests the behavior of a nil set of parameters.
-*/
+// Tests the behavior of a nil set of parameters.
 func TestNilParameters(test *testing.T) {
 
-	expression, _ := NewEvaluableExpression("true")
+	expression, _ := NewExpression("true")
 	_, err := expression.Evaluate(nil)
 
 	if err != nil {
@@ -1437,10 +1433,8 @@ func TestNilParameters(test *testing.T) {
 	}
 }
 
-/*
-	Tests functionality related to using functions with a struct method receiver.
-	Created to test #54.
-*/
+// Tests functionality related to using functions with a struct method receiver.
+// Created to test #54.
 func TestStructFunctions(test *testing.T) {
 
 	parseFormat := "2006"
@@ -1456,7 +1450,7 @@ func TestStructFunctions(test *testing.T) {
 		},
 	}
 
-	exp, _ := NewEvaluableExpressionWithFunctions("func1() + func2()", functions)
+	exp, _ := NewExpressionWithFunctions("func1() + func2()", functions)
 	result, _ := exp.Evaluate(nil)
 
 	if result != 4001.0 {
@@ -1467,7 +1461,7 @@ func TestStructFunctions(test *testing.T) {
 
 func runEvaluationTests(evaluationTests []EvaluationTest, test *testing.T) {
 
-	var expression *EvaluableExpression
+	var expression *Expression
 	var result interface{}
 	var parameters map[string]interface{}
 	var err error
@@ -1478,9 +1472,9 @@ func runEvaluationTests(evaluationTests []EvaluationTest, test *testing.T) {
 	for _, evaluationTest := range evaluationTests {
 
 		if evaluationTest.Functions != nil {
-			expression, err = NewEvaluableExpressionWithFunctions(evaluationTest.Input, evaluationTest.Functions)
+			expression, err = NewExpressionWithFunctions(evaluationTest.Input, evaluationTest.Functions)
 		} else {
-			expression, err = NewEvaluableExpression(evaluationTest.Input)
+			expression, err = NewExpression(evaluationTest.Input)
 		}
 
 		if err != nil {

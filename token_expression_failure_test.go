@@ -7,19 +7,17 @@ import (
 )
 
 const (
-	EXPERR_NIL_VALUE string = "cannot have a nil value"
+	expErrNilValue string = "cannot have a nil value"
 )
 
-/*
-	Contains a single test case for the EvaluableExpression.NewEvaluableExpressionFromTokens() method.
-
-	These tests, and the ones in `tokenExpressionFailure_test` will be fairly incomplete.
-	Creating an expression from a string and from tokens _must_ both perform the same syntax checks.
-	So all the checks in `parsing_test` will follow the same logic as the ones here.
-
-	These tests check some corner cases - such as tokens having nil values when they must have something.
-	Cases that cannot occur through the normal parser, but may occur in other parsers.
-*/
+// Contains a single test case for the Expression.NewExpressionFromTokens() method.
+//
+// These tests, and the ones in `tokenExpressionFailure_test` will be fairly incomplete.
+// Creating an expression from a string and from tokens _must_ both perform the same syntax checks.
+// So all the checks in `parsing_test` will follow the same logic as the ones here.
+//
+// These tests check some corner cases - such as tokens having nil values when they must have something.
+// Cases that cannot occur through the normal parser, but may occur in other parsers.
 type ExpressionTokenSyntaxTest struct {
 	Name     string
 	Input    []ExpressionToken
@@ -33,132 +31,132 @@ func TestNilValues(test *testing.T) {
 			Name: "Nil numeric",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: NUMERIC,
+					Kind: numeric,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil string",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: STRING,
+					Kind: stringToken,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil bool",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: BOOLEAN,
+					Kind: boolean,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil time",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: TIME,
+					Kind: timeToken,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil pattern",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: PATTERN,
+					Kind: pattern,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil variable",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: VARIABLE,
+					Kind: variable,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil prefix",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind: PREFIX,
+					Kind: prefix,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil comparator",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind: COMPARATOR,
+					Kind: comparator,
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil logicalop",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 				ExpressionToken{
-					Kind: LOGICALOP,
+					Kind: logicalop,
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil modifer",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 				ExpressionToken{
-					Kind: MODIFIER,
+					Kind: modifier,
 				},
 				ExpressionToken{
-					Kind:  NUMERIC,
+					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 		ExpressionTokenSyntaxTest{
 			Name: "Nil ternary",
 			Input: []ExpressionToken{
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 				ExpressionToken{
-					Kind: TERNARY,
+					Kind: ternary,
 				},
 				ExpressionToken{
-					Kind:  BOOLEAN,
+					Kind:  boolean,
 					Value: true,
 				},
 			},
-			Expected: EXPERR_NIL_VALUE,
+			Expected: expErrNilValue,
 		},
 	}
 
@@ -173,7 +171,7 @@ func runExpressionFromTokenTests(cases []ExpressionTokenSyntaxTest, expectFail b
 
 	for _, testCase := range cases {
 
-		_, err = NewEvaluableExpressionFromTokens(testCase.Input)
+		_, err = NewExpressionFromTokens(testCase.Input)
 
 		if err != nil {
 			if expectFail {

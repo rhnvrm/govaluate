@@ -17,296 +17,296 @@ type lexerState struct {
 var validLexerStates = []lexerState{
 
 	lexerState{
-		kind:       UNKNOWN,
+		kind:       unknown,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			BOOLEAN,
-			VARIABLE,
-			PATTERN,
-			FUNCTION,
-			ACCESSOR,
-			STRING,
-			TIME,
-			CLAUSE,
+			prefix,
+			numeric,
+			boolean,
+			variable,
+			pattern,
+			function,
+			accessor,
+			stringToken,
+			timeToken,
+			clause,
 		},
 	},
 
 	lexerState{
 
-		kind:       CLAUSE,
+		kind:       clause,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			BOOLEAN,
-			VARIABLE,
-			PATTERN,
-			FUNCTION,
-			ACCESSOR,
-			STRING,
-			TIME,
-			CLAUSE,
-			CLAUSE_CLOSE,
+			prefix,
+			numeric,
+			boolean,
+			variable,
+			pattern,
+			function,
+			accessor,
+			stringToken,
+			timeToken,
+			clause,
+			clauseClose,
 		},
 	},
 
 	lexerState{
 
-		kind:       CLAUSE_CLOSE,
+		kind:       clauseClose,
 		isEOF:      true,
 		isNullable: true,
 		validNextKinds: []TokenKind{
 
-			COMPARATOR,
-			MODIFIER,
-			NUMERIC,
-			BOOLEAN,
-			VARIABLE,
-			STRING,
-			PATTERN,
-			TIME,
-			CLAUSE,
-			CLAUSE_CLOSE,
-			LOGICALOP,
-			TERNARY,
-			SEPARATOR,
+			comparator,
+			modifier,
+			numeric,
+			boolean,
+			variable,
+			stringToken,
+			pattern,
+			timeToken,
+			clause,
+			clauseClose,
+			logicalop,
+			ternary,
+			separator,
 		},
 	},
 
 	lexerState{
 
-		kind:       NUMERIC,
+		kind:       numeric,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			TERNARY,
-			SEPARATOR,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			ternary,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       BOOLEAN,
+		kind:       boolean,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			TERNARY,
-			SEPARATOR,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			ternary,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       STRING,
+		kind:       stringToken,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			TERNARY,
-			SEPARATOR,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			ternary,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       TIME,
+		kind:       timeToken,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			SEPARATOR,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       PATTERN,
+		kind:       pattern,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			SEPARATOR,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       VARIABLE,
+		kind:       variable,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			TERNARY,
-			SEPARATOR,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			ternary,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       MODIFIER,
+		kind:       modifier,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			VARIABLE,
-			FUNCTION,
-			ACCESSOR,
-			STRING,
-			BOOLEAN,
-			CLAUSE,
-			CLAUSE_CLOSE,
+			prefix,
+			numeric,
+			variable,
+			function,
+			accessor,
+			stringToken,
+			boolean,
+			clause,
+			clauseClose,
 		},
 	},
 	lexerState{
 
-		kind:       COMPARATOR,
+		kind:       comparator,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			BOOLEAN,
-			VARIABLE,
-			FUNCTION,
-			ACCESSOR,
-			STRING,
-			TIME,
-			CLAUSE,
-			CLAUSE_CLOSE,
-			PATTERN,
+			prefix,
+			numeric,
+			boolean,
+			variable,
+			function,
+			accessor,
+			stringToken,
+			timeToken,
+			clause,
+			clauseClose,
+			pattern,
 		},
 	},
 	lexerState{
 
-		kind:       LOGICALOP,
+		kind:       logicalop,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			BOOLEAN,
-			VARIABLE,
-			FUNCTION,
-			ACCESSOR,
-			STRING,
-			TIME,
-			CLAUSE,
-			CLAUSE_CLOSE,
+			prefix,
+			numeric,
+			boolean,
+			variable,
+			function,
+			accessor,
+			stringToken,
+			timeToken,
+			clause,
+			clauseClose,
 		},
 	},
 	lexerState{
 
-		kind:       PREFIX,
+		kind:       prefix,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			NUMERIC,
-			BOOLEAN,
-			VARIABLE,
-			FUNCTION,
-			ACCESSOR,
-			CLAUSE,
-			CLAUSE_CLOSE,
+			numeric,
+			boolean,
+			variable,
+			function,
+			accessor,
+			clause,
+			clauseClose,
 		},
 	},
 
 	lexerState{
 
-		kind:       TERNARY,
+		kind:       ternary,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			BOOLEAN,
-			STRING,
-			TIME,
-			VARIABLE,
-			FUNCTION,
-			ACCESSOR,
-			CLAUSE,
-			SEPARATOR,
+			prefix,
+			numeric,
+			boolean,
+			stringToken,
+			timeToken,
+			variable,
+			function,
+			accessor,
+			clause,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       FUNCTION,
+		kind:       function,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-			CLAUSE,
+			clause,
 		},
 	},
 	lexerState{
 
-		kind:       ACCESSOR,
+		kind:       accessor,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-			CLAUSE,
-			MODIFIER,
-			COMPARATOR,
-			LOGICALOP,
-			CLAUSE_CLOSE,
-			TERNARY,
-			SEPARATOR,
+			clause,
+			modifier,
+			comparator,
+			logicalop,
+			clauseClose,
+			ternary,
+			separator,
 		},
 	},
 	lexerState{
 
-		kind:       SEPARATOR,
+		kind:       separator,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
 
-			PREFIX,
-			NUMERIC,
-			BOOLEAN,
-			STRING,
-			TIME,
-			VARIABLE,
-			FUNCTION,
-			ACCESSOR,
-			CLAUSE,
+			prefix,
+			numeric,
+			boolean,
+			stringToken,
+			timeToken,
+			variable,
+			function,
+			accessor,
+			clause,
 		},
 	},
 }
 
-func (this lexerState) canTransitionTo(kind TokenKind) bool {
+func (ls lexerState) canTransitionTo(kind TokenKind) bool {
 
-	for _, validKind := range this.validNextKinds {
+	for _, validKind := range ls.validNextKinds {
 
 		if validKind == kind {
 			return true
@@ -329,7 +329,7 @@ func checkExpressionSyntax(tokens []ExpressionToken) error {
 		if !state.canTransitionTo(token.Kind) {
 
 			// call out a specific error for tokens looking like they want to be functions.
-			if lastToken.Kind == VARIABLE && token.Kind == CLAUSE {
+			if lastToken.Kind == variable && token.Kind == clause {
 				return errors.New("Undefined function " + lastToken.Value.(string))
 			}
 

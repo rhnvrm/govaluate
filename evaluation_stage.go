@@ -47,35 +47,35 @@ var (
 	_false = interface{}(false)
 )
 
-func (this *evaluationStage) swapWith(other *evaluationStage) {
+func (es *evaluationStage) swapWith(other *evaluationStage) {
 
 	temp := *other
-	other.setToNonStage(*this)
-	this.setToNonStage(temp)
+	other.setToNonStage(*es)
+	es.setToNonStage(temp)
 }
 
-func (this *evaluationStage) setToNonStage(other evaluationStage) {
+func (es *evaluationStage) setToNonStage(other evaluationStage) {
 
-	this.symbol = other.symbol
-	this.operator = other.operator
-	this.leftTypeCheck = other.leftTypeCheck
-	this.rightTypeCheck = other.rightTypeCheck
-	this.typeCheck = other.typeCheck
-	this.typeErrorFormat = other.typeErrorFormat
+	es.symbol = other.symbol
+	es.operator = other.operator
+	es.leftTypeCheck = other.leftTypeCheck
+	es.rightTypeCheck = other.rightTypeCheck
+	es.typeCheck = other.typeCheck
+	es.typeErrorFormat = other.typeErrorFormat
 }
 
-func (this *evaluationStage) isShortCircuitable() bool {
+func (es *evaluationStage) isShortCircuitable() bool {
 
-	switch this.symbol {
-	case AND:
+	switch es.symbol {
+	case and:
 		fallthrough
-	case OR:
+	case or:
 		fallthrough
-	case TERNARY_TRUE:
+	case ternaryTrue:
 		fallthrough
-	case TERNARY_FALSE:
+	case ternaryFalse:
 		fallthrough
-	case COALESCE:
+	case coalesce:
 		return true
 	}
 
@@ -95,72 +95,90 @@ func addStage(left interface{}, right interface{}, parameters Parameters) (inter
 
 	return left.(float64) + right.(float64), nil
 }
+
 func subtractStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return left.(float64) - right.(float64), nil
 }
+
 func multiplyStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return left.(float64) * right.(float64), nil
 }
+
 func divideStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return left.(float64) / right.(float64), nil
 }
+
 func exponentStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return math.Pow(left.(float64), right.(float64)), nil
 }
+
 func modulusStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return math.Mod(left.(float64), right.(float64)), nil
 }
+
 func gteStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) >= right.(string)), nil
 	}
 	return boolIface(left.(float64) >= right.(float64)), nil
 }
+
 func gtStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) > right.(string)), nil
 	}
 	return boolIface(left.(float64) > right.(float64)), nil
 }
+
 func lteStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) <= right.(string)), nil
 	}
 	return boolIface(left.(float64) <= right.(float64)), nil
 }
+
 func ltStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) < right.(string)), nil
 	}
 	return boolIface(left.(float64) < right.(float64)), nil
 }
+
 func equalStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return boolIface(reflect.DeepEqual(left, right)), nil
 }
+
 func notEqualStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return boolIface(!reflect.DeepEqual(left, right)), nil
 }
+
 func andStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return boolIface(left.(bool) && right.(bool)), nil
 }
+
 func orStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return boolIface(left.(bool) || right.(bool)), nil
 }
+
 func negateStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return -right.(float64), nil
 }
+
 func invertStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return boolIface(!right.(bool)), nil
 }
+
 func bitwiseNotStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(^int64(right.(float64))), nil
 }
+
 func ternaryIfStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	if left.(bool) {
 		return right, nil
 	}
 	return nil, nil
 }
+
 func ternaryElseStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	if left != nil {
 		return left, nil
@@ -169,15 +187,16 @@ func ternaryElseStage(left interface{}, right interface{}, parameters Parameters
 }
 
 func regexStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-
-	var pattern *regexp.Regexp
-	var err error
+	var (
+		pattern *regexp.Regexp
+		err     error
+	)
 
 	switch right.(type) {
 	case string:
 		pattern, err = regexp.Compile(right.(string))
 		if err != nil {
-			return nil, errors.New(fmt.Sprintf("Unable to compile regexp pattern '%v': %v", right, err))
+			return nil, fmt.Errorf("Unable to compile regexp pattern '%v': %v", right, err)
 		}
 	case *regexp.Regexp:
 		pattern = right.(*regexp.Regexp)
@@ -187,7 +206,6 @@ func regexStage(left interface{}, right interface{}, parameters Parameters) (int
 }
 
 func notRegexStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-
 	ret, err := regexStage(left, right, parameters)
 	if err != nil {
 		return nil, err
@@ -199,21 +217,24 @@ func notRegexStage(left interface{}, right interface{}, parameters Parameters) (
 func bitwiseOrStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(int64(left.(float64)) | int64(right.(float64))), nil
 }
+
 func bitwiseAndStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(int64(left.(float64)) & int64(right.(float64))), nil
 }
+
 func bitwiseXORStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(int64(left.(float64)) ^ int64(right.(float64))), nil
 }
+
 func leftShiftStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(uint64(left.(float64)) << uint64(right.(float64))), nil
 }
+
 func rightShiftStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 	return float64(uint64(left.(float64)) >> uint64(right.(float64))), nil
 }
 
 func makeParameterStage(parameterName string) evaluationOperator {
-
 	return func(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
 		value, err := parameters.Get(parameterName)
 		if err != nil {
@@ -231,9 +252,7 @@ func makeLiteralStage(literal interface{}) evaluationOperator {
 }
 
 func makeFunctionStage(function ExpressionFunction) evaluationOperator {
-
 	return func(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-
 		if right == nil {
 			return function()
 		}
@@ -260,7 +279,6 @@ func typeConvertParam(p reflect.Value, t reflect.Type) (ret reflect.Value, err e
 }
 
 func typeConvertParams(method reflect.Value, params []reflect.Value) ([]reflect.Value, error) {
-
 	methodType := method.Type()
 	numIn := methodType.NumIn()
 	numParams := len(params)
@@ -290,7 +308,6 @@ func typeConvertParams(method reflect.Value, params []reflect.Value) ([]reflect.
 }
 
 func makeAccessorStage(pair []string) evaluationOperator {
-
 	reconstructed := strings.Join(pair, ".")
 
 	return func(left interface{}, right interface{}, parameters Parameters) (ret interface{}, err error) {
@@ -350,7 +367,7 @@ func makeAccessorStage(pair []string) evaluationOperator {
 
 				givenParams := right.([]interface{})
 				params = make([]reflect.Value, len(givenParams))
-				for idx, _ := range givenParams {
+				for idx := range givenParams {
 					params[idx] = reflect.ValueOf(givenParams[idx])
 				}
 
@@ -405,7 +422,6 @@ func makeAccessorStage(pair []string) evaluationOperator {
 }
 
 func separatorStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-
 	var ret []interface{}
 
 	switch left.(type) {
@@ -419,7 +435,6 @@ func separatorStage(left interface{}, right interface{}, parameters Parameters) 
 }
 
 func inStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-
 	for _, value := range right.([]interface{}) {
 		if left == value {
 			return true, nil
@@ -428,10 +443,7 @@ func inStage(left interface{}, right interface{}, parameters Parameters) (interf
 	return false, nil
 }
 
-//
-
 func isString(value interface{}) bool {
-
 	switch value.(type) {
 	case string:
 		return true
@@ -440,7 +452,6 @@ func isString(value interface{}) bool {
 }
 
 func isRegexOrString(value interface{}) bool {
-
 	switch value.(type) {
 	case string:
 		return true
@@ -466,12 +477,9 @@ func isFloat64(value interface{}) bool {
 	return false
 }
 
-/*
-	Addition usually means between numbers, but can also mean string concat.
-	String concat needs one (or both) of the sides to be a string.
-*/
+// Addition usually means between numbers, but can also mean string concat.
+// String concat needs one (or both) of the sides to be a string.
 func additionTypeCheck(left interface{}, right interface{}) bool {
-
 	if isFloat64(left) && isFloat64(right) {
 		return true
 	}
@@ -481,10 +489,8 @@ func additionTypeCheck(left interface{}, right interface{}) bool {
 	return true
 }
 
-/*
-	Comparison can either be between numbers, or lexicographic between two strings,
-	but never between the two.
-*/
+// Comparison can either be between numbers, or lexicographic between two strings,
+// but never between the two.
 func comparatorTypeCheck(left interface{}, right interface{}) bool {
 
 	if isFloat64(left) && isFloat64(right) {
@@ -504,10 +510,8 @@ func isArray(value interface{}) bool {
 	return false
 }
 
-/*
-	Converting a boolean to an interface{} requires an allocation.
-	We can use interned bools to avoid this cost.
-*/
+// Converting a boolean to an interface{} requires an allocation.
+// We can use interned bools to avoid this cost.
 func boolIface(b bool) interface{} {
 	if b {
 		return _true

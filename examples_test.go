@@ -1,17 +1,15 @@
 package govaluate
 
-/*
-  Contains test cases for all the expression examples given in the README.
-  While all of the functionality for these cases should be covered in other tests,
-  this is really just a sanity check.
-*/
+// Contains test cases for all the expression examples given in the README.
+// While all of the functionality for these cases should be covered in other tests,
+// this is really just a sanity check.
 import (
 	"testing"
 )
 
 func TestBasicEvaluation(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("10 > 0")
+	expression, err := NewExpression("10 > 0")
 	if err != nil {
 		test.Log(err)
 		test.Fail()
@@ -31,7 +29,7 @@ func TestBasicEvaluation(test *testing.T) {
 
 func TestParameterEvaluation(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("foo > 0")
+	expression, err := NewExpression("foo > 0")
 	if err != nil {
 		test.Log(err)
 		test.Fail()
@@ -54,7 +52,7 @@ func TestParameterEvaluation(test *testing.T) {
 
 func TestModifierEvaluation(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("(requests_made * requests_succeeded / 100) >= 90")
+	expression, err := NewExpression("(requests_made * requests_succeeded / 100) >= 90")
 	if err != nil {
 		test.Log(err)
 		test.Fail()
@@ -78,7 +76,7 @@ func TestModifierEvaluation(test *testing.T) {
 
 func TestStringEvaluation(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("http_response_body == 'service is ok'")
+	expression, err := NewExpression("http_response_body == 'service is ok'")
 	if err != nil {
 		test.Log(err)
 		test.Fail()
@@ -101,7 +99,7 @@ func TestStringEvaluation(test *testing.T) {
 
 func TestFloatEvaluation(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("(mem_used / total_mem) * 100")
+	expression, err := NewExpression("(mem_used / total_mem) * 100")
 	if err != nil {
 		test.Log(err)
 		test.Fail()
@@ -125,7 +123,7 @@ func TestFloatEvaluation(test *testing.T) {
 
 func TestDateComparison(test *testing.T) {
 
-	expression, err := NewEvaluableExpression("'2014-01-02' > '2014-01-01 23:59:59'")
+	expression, err := NewExpression("'2014-01-02' > '2014-01-01 23:59:59'")
 	if err != nil {
 		test.Log(err)
 		test.Fail()
@@ -144,7 +142,7 @@ func TestDateComparison(test *testing.T) {
 }
 
 func TestMultipleEvaluation(test *testing.T) {
-	expression, _ := NewEvaluableExpression("response_time <= 100")
+	expression, _ := NewExpression("response_time <= 100")
 	parameters := make(map[string]interface{}, 8)
 
 	for i := 0; i < 64; i++ {
@@ -173,7 +171,7 @@ func TestStrlenFunction(test *testing.T) {
 	}
 
 	expString := "strlen('someReallyLongInputString') <= 16"
-	expression, err := NewEvaluableExpressionWithFunctions(expString, functions)
+	expression, err := NewExpressionWithFunctions(expString, functions)
 	if err != nil {
 		test.Log(err)
 		test.Fail()
