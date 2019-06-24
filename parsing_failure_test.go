@@ -203,6 +203,31 @@ func TestParsingFailure(test *testing.T) {
 			Input:    "0x12g1",
 			Expected: invalidTokenTransition,
 		},
+		ParsingFailureTest{
+			Name:     "Invalid LOGICALOP transition",
+			Input:    "(a > 100 &&) == false",
+			Expected: invalidTokenTransition,
+		},
+		ParsingFailureTest{
+			Name:     "Invalid MODIFIER transition",
+			Input:    "(a + )",
+			Expected: invalidTokenTransition,
+		},
+		ParsingFailureTest{
+			Name:     "Invalid COMPARATOR transition",
+			Input:    "(a > )",
+			Expected: invalidTokenTransition,
+		},
+		ParsingFailureTest{
+			Name:     "Invalid PREFIX transition",
+			Input:    "(~)",
+			Expected: invalidTokenTransition,
+		},
+		ParsingFailureTest{
+			Name:     "Invalid CLAUSE_CLOSE transition",
+			Input:    "(a == b) c",
+			Expected: invalidTokenTransition,
+		},
 	}
 
 	runParsingFailureTests(parsingTests, test)

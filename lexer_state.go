@@ -15,13 +15,10 @@ type lexerState struct {
 // lexer states.
 // Constant for all purposes except compiler.
 var validLexerStates = []lexerState{
-
-	lexerState{
-		kind:       unknown,
+	lexerState{kind: unknown,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			boolean,
@@ -34,14 +31,11 @@ var validLexerStates = []lexerState{
 			clause,
 		},
 	},
-
 	lexerState{
-
 		kind:       clause,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			boolean,
@@ -55,37 +49,24 @@ var validLexerStates = []lexerState{
 			clauseClose,
 		},
 	},
-
 	lexerState{
-
 		kind:       clauseClose,
 		isEOF:      true,
 		isNullable: true,
 		validNextKinds: []TokenKind{
-
 			comparator,
 			modifier,
-			numeric,
-			boolean,
-			variable,
-			stringToken,
-			pattern,
-			timeToken,
-			clause,
 			clauseClose,
 			logicalop,
 			ternary,
 			separator,
 		},
 	},
-
 	lexerState{
-
 		kind:       numeric,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			modifier,
 			comparator,
 			logicalop,
@@ -95,12 +76,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       boolean,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			modifier,
 			comparator,
 			logicalop,
@@ -110,12 +89,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       stringToken,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			modifier,
 			comparator,
 			logicalop,
@@ -125,12 +102,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       timeToken,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			modifier,
 			comparator,
 			logicalop,
@@ -139,12 +114,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       pattern,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			modifier,
 			comparator,
 			logicalop,
@@ -153,12 +126,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       variable,
 		isEOF:      true,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			modifier,
 			comparator,
 			logicalop,
@@ -168,12 +139,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       modifier,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			variable,
@@ -182,16 +151,13 @@ var validLexerStates = []lexerState{
 			stringToken,
 			boolean,
 			clause,
-			clauseClose,
 		},
 	},
 	lexerState{
-
 		kind:       comparator,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			boolean,
@@ -201,17 +167,14 @@ var validLexerStates = []lexerState{
 			stringToken,
 			timeToken,
 			clause,
-			clauseClose,
 			pattern,
 		},
 	},
 	lexerState{
-
 		kind:       logicalop,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			boolean,
@@ -221,33 +184,26 @@ var validLexerStates = []lexerState{
 			stringToken,
 			timeToken,
 			clause,
-			clauseClose,
 		},
 	},
 	lexerState{
-
 		kind:       prefix,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			numeric,
 			boolean,
 			variable,
 			function,
 			accessor,
 			clause,
-			clauseClose,
 		},
 	},
-
 	lexerState{
-
 		kind:       ternary,
 		isEOF:      false,
 		isNullable: false,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			boolean,
@@ -261,21 +217,16 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
-		kind:       function,
-		isEOF:      false,
-		isNullable: false,
-		validNextKinds: []TokenKind{
-			clause,
-		},
+		kind:           function,
+		isEOF:          false,
+		isNullable:     false,
+		validNextKinds: []TokenKind{clause},
 	},
 	lexerState{
-
 		kind:       accessor,
 		isEOF:      true,
 		isNullable: false,
-		validNextKinds: []TokenKind{
-			clause,
+		validNextKinds: []TokenKind{clause,
 			modifier,
 			comparator,
 			logicalop,
@@ -285,12 +236,10 @@ var validLexerStates = []lexerState{
 		},
 	},
 	lexerState{
-
 		kind:       separator,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
-
 			prefix,
 			numeric,
 			boolean,
