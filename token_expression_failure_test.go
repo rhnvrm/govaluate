@@ -27,131 +27,131 @@ type ExpressionTokenSyntaxTest struct {
 func TestNilValues(test *testing.T) {
 
 	cases := []ExpressionTokenSyntaxTest{
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil numeric",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: numeric,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil string",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: stringToken,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil bool",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: boolean,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil time",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: timeToken,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil pattern",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: pattern,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil variable",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: variable,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil prefix",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind: prefix,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil comparator",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind:  numeric,
 					Value: 1.0,
 				},
-				ExpressionToken{
+				{
 					Kind: comparator,
 				},
-				ExpressionToken{
+				{
 					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil logicalop",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind:  boolean,
 					Value: true,
 				},
-				ExpressionToken{
+				{
 					Kind: logicalop,
 				},
-				ExpressionToken{
+				{
 					Kind:  boolean,
 					Value: true,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil modifer",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind:  numeric,
 					Value: 1.0,
 				},
-				ExpressionToken{
+				{
 					Kind: modifier,
 				},
-				ExpressionToken{
+				{
 					Kind:  numeric,
 					Value: 1.0,
 				},
 			},
 			Expected: expErrNilValue,
 		},
-		ExpressionTokenSyntaxTest{
+		{
 			Name: "Nil ternary",
 			Input: []ExpressionToken{
-				ExpressionToken{
+				{
 					Kind:  boolean,
 					Value: true,
 				},
-				ExpressionToken{
+				{
 					Kind: ternary,
 				},
-				ExpressionToken{
+				{
 					Kind:  boolean,
 					Value: true,
 				},

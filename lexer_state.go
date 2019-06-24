@@ -15,7 +15,8 @@ type lexerState struct {
 // lexer states.
 // Constant for all purposes except compiler.
 var validLexerStates = []lexerState{
-	lexerState{kind: unknown,
+	{
+		kind:       unknown,
 		isEOF:      false,
 		isNullable: true,
 		validNextKinds: []TokenKind{
@@ -31,7 +32,7 @@ var validLexerStates = []lexerState{
 			clause,
 		},
 	},
-	lexerState{
+	{
 		kind:       clause,
 		isEOF:      false,
 		isNullable: true,
@@ -49,7 +50,7 @@ var validLexerStates = []lexerState{
 			clauseClose,
 		},
 	},
-	lexerState{
+	{
 		kind:       clauseClose,
 		isEOF:      true,
 		isNullable: true,
@@ -62,7 +63,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       numeric,
 		isEOF:      true,
 		isNullable: false,
@@ -75,7 +76,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       boolean,
 		isEOF:      true,
 		isNullable: false,
@@ -88,7 +89,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       stringToken,
 		isEOF:      true,
 		isNullable: false,
@@ -101,7 +102,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       timeToken,
 		isEOF:      true,
 		isNullable: false,
@@ -113,7 +114,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       pattern,
 		isEOF:      true,
 		isNullable: false,
@@ -125,7 +126,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       variable,
 		isEOF:      true,
 		isNullable: false,
@@ -138,7 +139,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       modifier,
 		isEOF:      false,
 		isNullable: false,
@@ -153,7 +154,7 @@ var validLexerStates = []lexerState{
 			clause,
 		},
 	},
-	lexerState{
+	{
 		kind:       comparator,
 		isEOF:      false,
 		isNullable: false,
@@ -170,7 +171,7 @@ var validLexerStates = []lexerState{
 			pattern,
 		},
 	},
-	lexerState{
+	{
 		kind:       logicalop,
 		isEOF:      false,
 		isNullable: false,
@@ -186,7 +187,7 @@ var validLexerStates = []lexerState{
 			clause,
 		},
 	},
-	lexerState{
+	{
 		kind:       prefix,
 		isEOF:      false,
 		isNullable: false,
@@ -199,7 +200,7 @@ var validLexerStates = []lexerState{
 			clause,
 		},
 	},
-	lexerState{
+	{
 		kind:       ternary,
 		isEOF:      false,
 		isNullable: false,
@@ -216,13 +217,13 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:           function,
 		isEOF:          false,
 		isNullable:     false,
 		validNextKinds: []TokenKind{clause},
 	},
-	lexerState{
+	{
 		kind:       accessor,
 		isEOF:      true,
 		isNullable: false,
@@ -235,7 +236,7 @@ var validLexerStates = []lexerState{
 			separator,
 		},
 	},
-	lexerState{
+	{
 		kind:       separator,
 		isEOF:      false,
 		isNullable: true,

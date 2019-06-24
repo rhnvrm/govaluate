@@ -96,72 +96,72 @@ func TestNilParameterUsage(test *testing.T) {
 func TestModifierTyping(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:     "PLUS literal number to literal bool",
 			Input:    "1 + true",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "PLUS number to bool",
 			Input:    "number + bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "MINUS number to bool",
 			Input:    "number - bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "MINUS number to bool",
 			Input:    "number - bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "MULTIPLY number to bool",
 			Input:    "number * bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "DIVIDE number to bool",
 			Input:    "number / bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "EXPONENT number to bool",
 			Input:    "number ** bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "MODULUS number to bool",
 			Input:    "number % bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "XOR number to bool",
 			Input:    "number % bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "BITWISE_OR number to bool",
 			Input:    "number | bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "BITWISE_AND number to bool",
 			Input:    "number & bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "BITWISE_XOR number to bool",
 			Input:    "number ^ bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "BITWISE_LSHIFT number to bool",
 			Input:    "number << bool",
 			Expected: invalidModifierTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "BITWISE_RSHIFT number to bool",
 			Input:    "number >> bool",
 			Expected: invalidModifierTypes,
@@ -174,42 +174,42 @@ func TestModifierTyping(test *testing.T) {
 func TestLogicalOperatorTyping(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:     "AND number to number",
 			Input:    "number && number",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "OR number to number",
 			Input:    "number || number",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "AND string to string",
 			Input:    "string && string",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "OR string to string",
 			Input:    "string || string",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "AND number to string",
 			Input:    "number && string",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "OR number to string",
 			Input:    "number || string",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "AND bool to string",
 			Input:    "bool && string",
 			Expected: invalidLogicalopTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "OR string to bool",
 			Input:    "string || bool",
 			Expected: invalidLogicalopTypes,
@@ -224,108 +224,108 @@ func TestLogicalOperatorTyping(test *testing.T) {
 func TestComparatorTyping(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:     "GT literal bool to literal bool",
 			Input:    "true > true",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "GT bool to bool",
 			Input:    "bool > bool",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "GTE bool to bool",
 			Input:    "bool >= bool",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "LT bool to bool",
 			Input:    "bool < bool",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "LTE bool to bool",
 			Input:    "bool <= bool",
 			Expected: invalidComparatorTypes,
 		},
 
-		EvaluationFailureTest{
+		{
 			Name:     "GT number to string",
 			Input:    "number > string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "GTE number to string",
 			Input:    "number >= string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "LT number to string",
 			Input:    "number < string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "REQ number to string",
 			Input:    "number =~ string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "REQ number to bool",
 			Input:    "number =~ bool",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "REQ bool to number",
 			Input:    "bool =~ number",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "REQ bool to string",
 			Input:    "bool =~ string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "NREQ number to string",
 			Input:    "number !~ string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "NREQ number to bool",
 			Input:    "number !~ bool",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "NREQ bool to number",
 			Input:    "bool !~ number",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "NREQ bool to string",
 			Input:    "bool !~ string",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "IN non-array numeric",
 			Input:    "1 in 2",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "IN non-array string",
 			Input:    "1 in 'foo'",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "IN non-array boolean",
 			Input:    "1 in true",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "EQ number to boolean",
 			Input:    "1 == true",
 			Expected: invalidComparatorTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "NEQ string to number",
 			Input:    "'hello' != 10",
 			Expected: invalidComparatorTypes,
@@ -338,12 +338,12 @@ func TestComparatorTyping(test *testing.T) {
 func TestTernaryTyping(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:     "Ternary with number",
 			Input:    "10 ? true",
 			Expected: invalidTernaryTypes,
 		},
-		EvaluationFailureTest{
+		{
 			Name:     "Ternary with string",
 			Input:    "'foo' ? true",
 			Expected: invalidTernaryTypes,
@@ -356,7 +356,7 @@ func TestTernaryTyping(test *testing.T) {
 func TestRegexParameterCompilation(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:  "Regex equality runtime parsing",
 			Input: "'foo' =~ foo",
 			Parameters: map[string]interface{}{
@@ -364,7 +364,7 @@ func TestRegexParameterCompilation(test *testing.T) {
 			},
 			Expected: invalidRegex,
 		},
-		EvaluationFailureTest{
+		{
 			Name:  "Regex inequality runtime parsing",
 			Input: "'foo' =~ foo",
 			Parameters: map[string]interface{}{
@@ -380,7 +380,7 @@ func TestRegexParameterCompilation(test *testing.T) {
 func TestFunctionExecution(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:  "Function error bubbling",
 			Input: "error()",
 			Functions: map[string]ExpressionFunction{
@@ -398,43 +398,43 @@ func TestFunctionExecution(test *testing.T) {
 func TestInvalidParameterCalls(test *testing.T) {
 
 	evaluationTests := []EvaluationFailureTest{
-		EvaluationFailureTest{
+		{
 			Name:       "Missing parameter field reference",
 			Input:      "foo.NotExists",
 			Parameters: fooFailureParameters,
 			Expected:   invalidParameterCall,
 		},
-		EvaluationFailureTest{
+		{
 			Name:       "Parameter method call on missing function",
 			Input:      "foo.NotExist()",
 			Parameters: fooFailureParameters,
 			Expected:   invalidParameterCall,
 		},
-		EvaluationFailureTest{
+		{
 			Name:       "Nested missing parameter field reference",
 			Input:      "foo.Nested.NotExists",
 			Parameters: fooFailureParameters,
 			Expected:   invalidParameterCall,
 		},
-		EvaluationFailureTest{
+		{
 			Name:       "Parameter method call returns error",
 			Input:      "foo.AlwaysFail()",
 			Parameters: fooFailureParameters,
 			Expected:   "function should always fail",
 		},
-		EvaluationFailureTest{
+		{
 			Name:       "Too few arguments to parameter call",
 			Input:      "foo.FuncArgStr()",
 			Parameters: fooFailureParameters,
 			Expected:   tooFewArgs,
 		},
-		EvaluationFailureTest{
+		{
 			Name:       "Too many arguments to parameter call",
 			Input:      "foo.FuncArgStr('foo', 'bar', 15)",
 			Parameters: fooFailureParameters,
 			Expected:   tooManyArgs,
 		},
-		EvaluationFailureTest{
+		{
 			Name:       "Mismatched parameters",
 			Input:      "foo.FuncArgStr(5)",
 			Parameters: fooFailureParameters,
