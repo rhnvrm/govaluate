@@ -521,7 +521,10 @@ func findTypeChecks(symbol OperatorSymbol) typeChecks {
 	case eq:
 		fallthrough
 	case neq:
-		return typeChecks{}
+		return typeChecks{
+			combined: equalityTypeCheck,
+		}
+	// unchecked cases
 	case ternaryFalse:
 		fallthrough
 	case coalesce:
